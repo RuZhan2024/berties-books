@@ -1,13 +1,22 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <title>Welcome to <%=shopData.shopName%></title>
-    <link rel="stylesheet"  type="text/css" href="/main.css" />
-  </head>
-  <body>
-    <h1>Welcome to <%=shopData.shopName%></h1>
-    <p><a href="about">About <%=shopData.shopName%></a></p>
-    <p><a href="books/search">Search for books</a></p>
-    <p><a href="users/register">Register with us</a></p>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <title>Berties Books</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>Berties Books</h1>
+    <p>Welcome! Choose a page:</p>
+    <nav>
+      <ul>
+        <li><a href="/books/list">All Books</a></li>
+        <li><a href="/books/addbook">Add a Book</a></li>
+        <li><a href="/books/bargainbooks">Bargain Books (&lt; £20)</a></li>
+        <li><a href="/books/search">Search</a></li>
+      </ul>
+    </nav>
+  </main>
+</body>
 </html>

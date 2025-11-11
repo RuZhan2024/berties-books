@@ -1,16 +1,30 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <title>Register for <%=shopData.shopName%></title>
-    <link rel="stylesheet"  type="text/css" href="/main.css" />
+    <meta charset="utf-8" />
+    <title>Register for <%= shopData.shopName %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="/main.css" />
   </head>
   <body>
-    <h1>Register for <%=shopData.shopName%></h1>
-    <form method="POST" action="registered">
-        <p>First name: <input id="first" type="text" name="first" /></p>
-        <p>Last name: <input id="last" type="text" name="last" /></p>
-        <p>Email: <input id="email" type="email" name="email" /></p>
-        <input type="submit" value="Register" />
+    <header class="container">
+      <h1>Register for <%= shopData.shopName %></h1>
+      <p><a href="/">← Back home</a></p>
+    </header>
+
+    <main class="container">
+      <form method="POST" action="registered" class="form card">
+        <label>First name
+          <input id="first" type="text" name="first" required />
+        </label>
+        <label>Last name
+          <input id="last" type="text" name="last" required />
+        </label>
+        <label>Email
+          <input id="email" type="email" name="email" required />
+        </label>
+        <button type="submit" class="btn">Register</button>
       </form>
+    </main>
   </body>
 </html>

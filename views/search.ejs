@@ -1,54 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <title>Search Books</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="stylesheet" href="/main.css" />
 </head>
 <body>
-  <main class="container">
+  <header class="container">
     <h1>Search Books</h1>
     <p><a href="/">← Back home</a></p>
+  </header>
 
-    <form method="post" action="/books/search" class="form">
-      <label>Keyword
-        <input name="keyword" type="text" value="<%= (locals.keyword ?? '') %>" required />
-      </label>
-
-      <fieldset class="inline">
-        <legend>Mode</legend>
-        <label>
-          <input type="radio" name="mode" value="partial"
-                 <%= (locals.mode !== 'exact') ? 'checked' : '' %> />
-          Partial (LIKE)
+  <main class="container">
+    <section class="card">
+      <form method="post" action="/books/search" class="form">
+        <label>Keyword
+          <input name="keyword" type="text" value="<%= (locals.keyword ?? '') %>" required />
         </label>
-        <label>
-          <input type="radio" name="mode" value="exact"
-                 <%= (locals.mode === 'exact') ? 'checked' : '' %> />
-          Exact (=)
-        </label>
-      </fieldset>
 
-      <button type="submit">Search</button>
-    </form>
+        <fieldset class="inline">
+          <legend>Mode</legend>
+          <label>
+            <input type="radio" name="mode" value="partial"
+                   <%= (locals.mode !== 'exact') ? 'checked' : '' %> />
+            Partial (LIKE)
+          </label>
+          <label>
+            <input type="radio" name="mode" value="exact"
+                   <%= (locals.mode === 'exact') ? 'checked' : '' %> />
+            Exact (=)
+          </label>
+        </fieldset>
+
+        <button type="submit" class="btn">Search</button>
+      </form>
+    </section>
 
     <% if (locals.results) { %>
-      <h2>Results</h2>
-      <% if (locals.results.length === 0) { %>
-        <p>No matching books.</p>
-      <% } else { %>
-        <table class="table">
-          <thead><tr><th>Title</th><th>Price (£)</th></tr></thead>
-          <tbody>
-          <% locals.results.forEach(r => { %>
-            <tr>
-              <td><%= r.name %></td>
-              <td><%= Number(r.price).toFixed(2) %></td>
-            </tr>
-          <% }) %>
-          </tbody>
-        </table>
-      <% } %>
+      <section class="card mt-4">
+        <h2>Results</h2>
+        <% if (locals.results.length === 0) { %>
+          <p class="muted">No matching books.</p>
+        <% } else { %>
+          <table class="table">
+            <thead><tr><th>Title</th><th>Price (£)</th></tr></thead>
+            <tbody>
+            <% locals.results.forEach(r => { %>
+              <tr>
+                <td><%= r.name %></td>
+                <td><%= Number(r.price).toFixed(2) %></td>
+              </tr>
+            <% }) %>
+            </tbody>
+          </table>
+        <% } %>
+      </section>
     <% } %>
   </main>
 </body>

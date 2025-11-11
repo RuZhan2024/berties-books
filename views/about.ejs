@@ -1,11 +1,26 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <title>About <%=shopData.shopName%></title>
-    <link rel="stylesheet"  type="text/css" href="/main.css" />
+    <meta charset="utf-8" />
+    <title>About <%= shopData.shopName %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="/main.css" />
   </head>
   <body>
-    <h1>About <%=shopData.shopName%></h1>
-    <p>We sell all sorts of books and nothing else!</p>
+    <header class="container">
+      <h1>About <%= shopData.shopName %></h1>
+      <p><a href="/">← Back home</a></p>
+    </header>
+
+    <main class="container">
+      <section class="card">
+        <p>We sell all sorts of books and nothing else!</p>
+        <p class="muted mt-2">Founded in 2025 in London, we’re passionate about stories, learning, and great prices.</p>
+        <div class="mt-3">
+          <a class="btn ghost" href="/books/bargainbooks">See bargains</a>
+          <a class="btn ghost" href="/books/list">Browse all books</a>
+        </div>
+      </section>
+    </main>
   </body>
 </html>

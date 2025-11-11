@@ -1,32 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <title>All Books</title>
-  <link rel="stylesheet" href="/styles.css" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="/main.css" />
 </head>
 <body>
-  <main class="container">
+  <header class="container">
     <h1>All Books</h1>
     <p><a href="/">← Back home</a></p>
+  </header>
 
+  <main class="container">
     <% if (!availableBooks || availableBooks.length === 0) { %>
-      <p>No books found.</p>
+      <section class="card">
+        <p class="muted">No books found.</p>
+      </section>
     <% } else { %>
-      <table class="table">
-        <thead>
-          <tr><th>#</th><th>Title</th><th>Price (£)</th></tr>
-        </thead>
-        <tbody>
-        <% availableBooks.forEach((b, i) => { %>
-          <tr>
-            <td><%= i + 1 %></td>
-            <td><%= b.name %></td>
-            <td><%= Number(b.price).toFixed(2) %></td>
-          </tr>
-        <% }) %>
-        </tbody>
-      </table>
+      <section class="card">
+        <table class="table">
+          <thead>
+            <tr><th>#</th><th>Title</th><th>Price (£)</th></tr>
+          </thead>
+          <tbody>
+          <% availableBooks.forEach((b, i) => { %>
+            <tr>
+              <td><%= i + 1 %></td>
+              <td><%= b.name %></td>
+              <td><%= Number(b.price).toFixed(2) %></td>
+            </tr>
+          <% }) %>
+          </tbody>
+        </table>
+      </section>
     <% } %>
   </main>
 </body>

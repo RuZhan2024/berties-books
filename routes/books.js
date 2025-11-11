@@ -22,11 +22,24 @@ router.get('/list', function(req, res, next) {
      });
 });
 
-router.get("/addBook", function(req,res,next) {
-    res.render("addBook.ejs");
+router.get("/addbook", function(req,res,next) {
+    res.render("addbook.ejs");
 });
 
-
+// POST /books/bookadded — insert then confirm (Lab 6D Task 3)
+router.post('/bookadded', (req, res, next) => {
+  const { name, price } = req.body;
+    
+  if (!name || !price) {
+    return res.render('addbook', { error: 'Name and price are required.' });
+  }
+  const sql = 'INSERT INTO books (name, price) VALUES (?, ?)';
+  db.query(sql, [name.trim(), parseFloat(price)], (err) => {
+    if (err) return next(err);
+    
+    res.send(`This book is added to database, name: ${name} price ${price}`);
+  });
+});
 
 // Export the router object so index.js can access it
 module.exports = router

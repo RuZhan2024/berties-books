@@ -1,19 +1,33 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <title>Welcome to <%=shopData.shopName%></title>
-    <link rel="stylesheet"  type="text/css" href="/main.css" />
-  </head>
-  <body>
-    <h1>Welcome to <%=shopData.shopName%></h1>
-    <h2>Here are the books that we sell:</h2>
-    <ul>
-        <%for (let i in availableBooks){%>
-            <li>
-                <span><%=availableBooks[i].name%></span>
-                <span> £<%=availableBooks[i].price%></span>
-            </li>
-        <%}%>
-    </ul>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <title>All Books</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>All Books</h1>
+    <p><a href="/">← Back home</a></p>
+
+    <% if (!availableBooks || availableBooks.length === 0) { %>
+      <p>No books found.</p>
+    <% } else { %>
+      <table class="table">
+        <thead>
+          <tr><th>#</th><th>Title</th><th>Price (£)</th></tr>
+        </thead>
+        <tbody>
+        <% availableBooks.forEach((b, i) => { %>
+          <tr>
+            <td><%= i + 1 %></td>
+            <td><%= b.name %></td>
+            <td><%= Number(b.price).toFixed(2) %></td>
+          </tr>
+        <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </main>
+</body>
 </html>

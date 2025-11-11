@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Welcome to <%=shopData.shopName%></title>
+    <link rel="stylesheet"  type="text/css" href="/main.css" />
+  </head>
+  <body>
+    <h1>Bertie's Books: Add book</h1>
+    <form action="books/bookAdded" method="get">
+        <label for="book_name">Book name: </label>
+        <input id="book_name" type="text"/>
+        <label for="Price">Price: </label>
+        <input idd="price" type="number" />
+        <button type="submit">ADD BOOK</button>
+    </form>
+  </body>
+</html>

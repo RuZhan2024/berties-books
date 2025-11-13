@@ -28,13 +28,13 @@
             <%# Partial match (SQL LIKE). Default when mode != 'exact'. %>
             <input type="radio" name="mode" value="partial"
                    <%= (locals.mode !== 'exact') ? 'checked' : '' %> />
-            Partial (LIKE)
+            Partial
           </label>
           <label>
             <%# Exact match (SQL =). %>
             <input type="radio" name="mode" value="exact"
                    <%= (locals.mode === 'exact') ? 'checked' : '' %> />
-            Exact (=)
+            Exact
           </label>
         </fieldset>
 

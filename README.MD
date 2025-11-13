@@ -82,8 +82,6 @@ npm start
 | `/books/search`       | http://www.doc.gold.ac.uk/usr/122/books/search                |
 ```
 
----
-
 ## Project Structure
 
 ```text

@@ -179,6 +179,18 @@ source insert_test_data.sql
 
 Create a `.env` file on the VM with the appropriate database credentials.
 
+## Local .env setup (required to run the app)
+
+For security reasons, the `.env` file is **not** included in this repository.  
+To run the app locally, please create a `.env` file in the project root with the following content (or adjust to your own MySQL setup):
+
+```ini
+DB_HOST=localhost
+DB_USER=berties_books_app
+DB_PASSWORD=qwertyuiop
+DB_NAME=berties_books
+DB_PORT=3306
+
 ### Run the app in the background
 
 ```bash

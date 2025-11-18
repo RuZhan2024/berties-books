@@ -57,7 +57,7 @@ router.post("/registered", function (req, res, next) {
           if (err) return next(err);
 
           // Registration succeeded, send user to the login page
-          return res.redirect("/users/login");
+          return res.redirect("login");
         }
       );
     });

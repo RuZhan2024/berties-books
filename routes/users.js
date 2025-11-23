@@ -5,13 +5,30 @@ const bcrypt = require("bcrypt");
 // Number of salt rounds used by bcrypt when hashing passwords
 const SALT_ROUNDS = 10;
 
-// Show registration form
+/**
+ * Helper: record every login attempt into login_audit.
+ * Assumes a global `db` connection is available (as in books.js).
+ */
+function logLoginAttempt(email, wasSuccessful) {
+  const sql = "INSERT INTO login_audit (email, was_successful) VALUES (?, ?)";
+  db.query(sql, [email, wasSuccessful ? 1 : 0], (err) => {
+    if (err) {
+      console.error("Failed to insert login_audit row:", err);
+    }
+  });
+}
+
+// -----------------------------------------------------------------------------
+// Registration
+// -----------------------------------------------------------------------------
+
+// GET /users/register — show registration form
 router.get("/register", function (req, res, next) {
   // Pass an empty message the first time the form is shown
   res.render("register.ejs", { msg: "" });
 });
 
-// Handle registration
+// POST /users/registered — handle registration form submission
 router.post("/registered", function (req, res, next) {
   const { first, last, email, password, confirm_password } = req.body;
 
@@ -57,20 +74,24 @@ router.post("/registered", function (req, res, next) {
           if (err) return next(err);
 
           // Registration succeeded, send user to the login page
-          return res.redirect("login");
+          return res.redirect("/users/login");
         }
       );
     });
   });
 });
 
-// Show login form
+// -----------------------------------------------------------------------------
+// Login
+// -----------------------------------------------------------------------------
+
+// GET /users/login — show login form
 router.get("/login", function (req, res, next) {
   // `msg` is used to display errors (e.g. wrong password) in the template
   res.render("login.ejs", { msg: "" });
 });
 
-// Handle login
+// POST /users/login — handle login
 router.post("/login", function (req, res, next) {
   const { email, password } = req.body;
 
@@ -88,7 +109,8 @@ router.post("/login", function (req, res, next) {
     if (err) return next(err);
 
     if (rows.length === 0) {
-      // Do not reveal whether the email exists — generic message is safer
+      // No such email — log failed attempt and show generic message
+      logLoginAttempt(email, false);
       return res.render("login.ejs", {
         msg: "Incorrect email or password. Please try again.",
       });
@@ -101,21 +123,27 @@ router.post("/login", function (req, res, next) {
       if (err) return next(err);
 
       if (!isMatch) {
-        // Password mismatch — again, use a generic message
+        // Password mismatch — log failed attempt and show generic message
+        logLoginAttempt(email, false);
         return res.render("login.ejs", {
           msg: "Incorrect email or password. Please try again.",
         });
       }
 
       // At this point, the user is authenticated.
-      // Store user info in the session later:
-      // req.session.userId = user.id;
-      res.render("index.ejs");
+      // (You could store info in the session here later, e.g. req.session.userId = user.id)
+      logLoginAttempt(email, true);
+
+      return res.render("index.ejs");
     });
   });
 });
 
-// List all users (for admin/testing purposes)
+// -----------------------------------------------------------------------------
+// User list (for admin / testing)
+// -----------------------------------------------------------------------------
+
+// GET /users/userlist — list all users
 router.get("/userlist", function (req, res, next) {
   const sqlquery = "SELECT id, first_name, last_name, email FROM users";
 
@@ -127,6 +155,23 @@ router.get("/userlist", function (req, res, next) {
 
     // Render the userList view and pass the users array
     res.render("userList.ejs", { users: rows });
+  });
+});
+
+// -----------------------------------------------------------------------------
+// Login audit page
+// -----------------------------------------------------------------------------
+
+// GET /users/audit — show login audit entries
+router.get("/audit", function (req, res, next) {
+  const sql =
+    "SELECT id, email, was_successful, created_at FROM login_audit ORDER BY created_at DESC";
+
+  db.query(sql, (err, rows) => {
+    if (err) return next(err);
+
+    // `entries` will be an array of audit rows
+    res.render("audit.ejs", { entries: rows });
   });
 });
 

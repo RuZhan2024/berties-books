@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Login Audit</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="/main.css" />
+</head>
+<body>
+  <%# Renders a table of login attempts. Expects 'entries'. %>
+
+  <header class="container">
+    <h1>Login Audit</h1>
+    <p>
+      <a href="/">← Back home</a>
+      ·
+      <a href="/users/login">Back to login</a>
+    </p>
+  </header>
+
+  <main class="container">
+    <% if (!entries || entries.length === 0) { %>
+      <section class="card">
+        <p class="muted">No login attempts recorded yet.</p>
+      </section>
+    <% } else { %>
+      <section class="card">
+        <table class="table">
+          <caption class="muted">Most recent login attempts</caption>
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Email</th>
+              <th scope="col">Result</th>
+              <th scope="col">When</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% entries.forEach((entry) => { %>
+              <tr>
+                <td><%= entry.id %></td>
+                <td><%= entry.email %></td>
+                <td><%= entry.was_successful ? "Success" : "Failed" %></td>
+                <td><%= entry.created_at %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </section>
+    <% } %>
+  </main>
+</body>
+</html>

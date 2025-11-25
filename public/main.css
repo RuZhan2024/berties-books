@@ -10,39 +10,41 @@ h2 {
     color: cadetblue;
 }
 
-p,li {
+p, li {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Basic link styles */
 a:link {
     color: orangered;
     text-decoration: none;
-    padding:5px;
-  }
-  
-  /* visited link */
-  a:visited {
+    padding: 5px;
+}
+
+/* visited link */
+a:visited {
     color: tomato;
     text-decoration: none;
-    padding:5px;
-  }
-  
-  /* mouse over link */
-  a:hover {
+    padding: 5px;
+}
+
+/* mouse over link */
+a:hover {
     color: white;
     text-decoration: none;
     background-color: orangered;
-    padding:5px;
-  }
-  
-  /* selected link */
-  a:active {
+    padding: 5px;
+}
+
+/* selected link */
+a:active {
     color: blue;
     text-decoration: none;
-    padding:5px;
-  }
+    padding: 5px;
+}
+
 /* ========= Base / Layout ========= */
-:root{
+:root {
   --bg: #f7fafb;
   --card: #ffffff;
   --text: #111827;
@@ -71,7 +73,7 @@ html, body {
 }
 
 .container {
-  max-width: 980px;
+  max-width: 1200px;
   margin: 40px auto;
   padding: 0 16px;
 }
@@ -90,8 +92,18 @@ header.container h1 {
 }
 header.container p { margin: 6px 0 0; }
 
-/* ========= Navigation (index) ========= */
-nav ul {
+/* Layout: split header into left nav and right auth controls */
+.nav-bar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+/* ========= Navigation (left: main site links) ========= */
+.nav-main ul {
   list-style: none;
   padding: 0;
   margin: 16px 0 0;
@@ -99,7 +111,7 @@ nav ul {
   gap: 10px;
   flex-wrap: wrap;
 }
-nav a {
+.nav-main a {
   display: inline-block;
   background: var(--card);
   border: 1px solid var(--border);
@@ -108,7 +120,67 @@ nav a {
   box-shadow: var(--shadow-sm);
   transition: transform .08s ease, filter .12s ease;
 }
-nav a:hover { transform: translateY(-1px); filter: brightness(1.02); }
+.nav-main a:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.02);
+}
+
+/* ========= Right-side authentication controls ========= */
+.nav-auth {
+  margin-left: auto;          /* push to far right */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Welcome badge */
+.nav-user-badge {
+  background: var(--card);
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  box-shadow: var(--shadow-sm);
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* Auth buttons (different from main nav pills) */
+.btn-auth {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+  box-shadow: var(--shadow-sm);
+  transition: transform .08s ease, filter .12s ease, box-shadow .12s ease;
+}
+
+/* Login = outline style */
+.btn-login {
+  background: #fff;
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Register = solid accent */
+.btn-register {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Logout = accent-2 (tomato) */
+.btn-logout {
+  background: var(--accent-2);
+  color: #fff;
+}
+
+.btn-auth:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
 
 /* ========= Cards & utility blocks ========= */
 .card {
@@ -128,7 +200,7 @@ nav a:hover { transform: translateY(-1px); filter: brightness(1.02); }
 
 /* ========= Buttons ========= */
 button,
-.btn{
+.btn {
   appearance: none;
   border: none;
   border-radius: 10px;
@@ -140,28 +212,64 @@ button,
   box-shadow: var(--shadow-sm);
   transition: transform .08s ease, filter .15s ease, box-shadow .15s ease;
 }
-button:hover, .btn:hover{
+button:hover, .btn:hover {
   filter: brightness(1.05);
   transform: translateY(-1px);
 }
-.btn.secondary{
+.btn.secondary {
   background: var(--primary);
 }
-.btn.ghost{
+.btn.ghost {
   background: #fff;
   color: var(--primary);
   border: 1px solid var(--primary);
 }
 
 /* Keyboard accessibility */
-a:focus-visible, button:focus-visible, input:focus-visible{
+a:focus-visible, button:focus-visible, input:focus-visible {
   outline: 3px solid rgba(255,69,0,0.35);
   outline-offset: 2px;
   border-radius: 8px;
 }
 
+/* Override global link colours for auth buttons */
+a.btn-auth,
+a.btn-auth:link,
+a.btn-auth:visited {
+  text-decoration: none;
+  padding: 8px 14px;           /* keep spacing from .btn-auth */
+}
+
+/* Login button – outline style */
+a.btn-login,
+a.btn-login:link,
+a.btn-login:visited {
+  background: #fff;
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Register button – solid orange */
+a.btn-register,
+a.btn-register:link,
+a.btn-register:visited {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* Logout button – solid tomato */
+a.btn-logout,
+a.btn-logout:link,
+a.btn-logout:visited {
+  background: var(--accent-2);
+  color: #fff;
+  border-color: var(--accent-2);
+}
+
+
 /* ========= Forms (register, addBook, search) ========= */
-.form{
+.form {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -171,7 +279,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{
   max-width: 540px;
   box-shadow: var(--shadow);
 }
-.form label{
+.form label {
   display: grid;
   gap: 6px;
   color: var(--muted);
@@ -180,7 +288,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{
 .form input[type="text"],
 .form input[type="number"],
 .form input[type="email"],
-.form input[type="password"]{
+.form input[type="password"] {
   padding: 10px 12px;
   border: 1px solid #cbd5e1;
   border-radius: 10px;
@@ -189,13 +297,13 @@ a:focus-visible, button:focus-visible, input:focus-visible{
   background: #fff;
   transition: border-color .15s ease, box-shadow .15s ease;
 }
-.form input:focus{
+.form input:focus {
   border-color: var(--primary);
   box-shadow: 0 0 0 4px rgba(0,139,139,0.12);
 }
 
 /* Radio group in search mode selector */
-fieldset.inline{
+fieldset.inline {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -203,21 +311,21 @@ fieldset.inline{
   padding: 10px 12px;
   border-radius: 10px;
 }
-fieldset.inline legend{
+fieldset.inline legend {
   padding: 0 6px;
   color: var(--muted);
   font-size: 13px;
 }
 
 /* Messages */
-.error{
+.error {
   color: #b00020;
   background: #fde7eb;
   border: 1px solid #f7c7cf;
   padding: 10px 12px;
   border-radius: 10px;
 }
-.success{
+.success {
   color: #14532d;
   background: #dcfce7;
   border: 1px solid #86efac;
@@ -226,7 +334,7 @@ fieldset.inline legend{
 }
 
 /* ========= Tables (list, search results) ========= */
-.table{
+.table {
   width: 100%;
   border-collapse: collapse;
   background: var(--card);
@@ -235,27 +343,27 @@ fieldset.inline legend{
   overflow: hidden;
   box-shadow: var(--shadow);
 }
-.table thead{
+.table thead {
   background: #eef7f8;
 }
-.table th, .table td{
+.table th, .table td {
   padding: 12px 14px;
   border-bottom: 1px solid var(--border);
   text-align: left;
   vertical-align: top;
   font-size: 15px;
 }
-.table tbody tr:nth-child(odd){
+.table tbody tr:nth-child(odd) {
   background: #fcfcfc;
 }
-.table tbody tr:hover{
+.table tbody tr:hover {
   background: #f8fbfb;
 }
-.table tbody tr:last-child td{ border-bottom: none; }
+.table tbody tr:last-child td { border-bottom: none; }
 
 /* ========= Lists (bargainbooks, quick links) ========= */
 .list { list-style: none; padding: 0; margin: 0; }
-.list li{
+.list li {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -270,20 +378,18 @@ fieldset.inline legend{
 .list .title { font-weight: 600; }
 .list .price { color: var(--primary); }
 
-/* ========= Page-specific polish ========= */
-
 /* Index quick links inside a .card */
-.card .list li .btn.ghost{
+.card .list li .btn.ghost {
   margin-left: auto;
 }
 
 /* Register page tweaks */
-form[action="registered"] .btn{
+form[action="registered"] .btn {
   width: fit-content;
 }
 
 /* AddBook page tweaks */
-form[action="bookadded"] .btn{
+form[action="bookadded"] .btn {
   width: fit-content;
 }
 
@@ -297,16 +403,36 @@ a.btn.ghost + a.btn.secondary {
 }
 
 /* ========= Responsive ========= */
-@media (max-width: 640px){
-  .container{ margin: 24px auto; }
-  nav ul{ gap: 8px; }
-  .form{ padding: 14px; }
-  .table th, .table td{ padding: 10px 12px; }
-  .list li{ flex-direction: column; align-items: flex-start; }
+@media (max-width: 640px) {
+  .container { margin: 24px auto; }
+
+  .nav-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav-auth {
+    margin-left: 0;
+  }
+
+  .nav-main ul { gap: 8px; }
+
+  .form { padding: 14px; }
+
+  .table th, .table td { padding: 10px 12px; }
+
+  .list li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 /* ========= Optional subtle animations ========= */
-@media (prefers-reduced-motion: no-preference){
-  .card, .table, .list li { transition: box-shadow .2s ease, transform .08s ease; }
-  .list li:hover { transform: translateY(-1px); }
+@media (prefers-reduced-motion: no-preference) {
+  .card, .table, .list li {
+    transition: box-shadow .2s ease, transform .08s ease;
+  }
+  .list li:hover {
+    transform: translateY(-1px);
+  }
 }

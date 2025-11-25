@@ -147,7 +147,7 @@ router.post("/login", function (req, res, next) {
     });
   }
 
-  const query = "SELECT id, email, hashed_password FROM users WHERE email = ?";
+  const query = "SELECT id, email, hashed_password, first_name, last_name FROM users WHERE email = ?";
 
   // Look up the user by email
   db.query(query, [email], function (err, rows) {
@@ -162,7 +162,6 @@ router.post("/login", function (req, res, next) {
     }
 
     const user = rows[0];
-
     // Compare the provided password with the stored hash
     bcrypt.compare(password, user.hashed_password, function (err, isMatch) {
       if (err) return next(err);
@@ -174,13 +173,12 @@ router.post("/login", function (req, res, next) {
           msg: "Incorrect email or password. Please try again.",
         });
       }
-
       // At this point, the user is authenticated.
       // Save user session here, when login is successful
       req.session.userId = user.id; // or user.email if you prefer
-
+      req.session.user = user.first_name + " " + user.last_name;   // store login “username”
       logLoginAttempt(email, true);
-
+   
       // After login, show the home page (or redirect somewhere else)
       return res.render("index.ejs");
     });

@@ -10,22 +10,35 @@
     <%# Landing page: global nav + shortcuts. Expects shopData.shopName. %>
     <header class="container">
       <h1>Welcome to <%= shopData.shopName %></h1>
-      <nav>
-        <%# Primary navigation. Keep hrefs in sync with Express routes. %>
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/books/list">All Books</a></li>
-          <li><a href="/books/addbook">Add a Book</a></li>
-          <li><a href="/books/search">Search</a></li>
-          <li><a href="/books/bargainbooks">Bargains</a></li>
-          <li><a href="/users/register">Register</a></li>
-          <li><a href="/users/login">Login</a></li>
-          <li><a href="/users/audit">Audit</a></li>
-          <li><a href="/users/userlist">User List</a></li>
-          <li><a href="/about">About</a></li>
-          <li><a href="/users/logout">Logout</a></li>
-        </ul>
-      </nav>
+
+      <div class="nav-bar">
+        <!-- LEFT: main site navigation -->
+        <nav class="nav-main">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/books/list">All Books</a></li>
+            <li><a href="/books/addbook">Add a Book</a></li>
+            <li><a href="/books/search">Search</a></li>
+            <li><a href="/books/bargainbooks">Bargains</a></li>
+            <li><a href="/users/audit">Audit</a></li>
+            <li><a href="/users/userlist">User List</a></li>
+            <li><a href="/about">About</a></li>
+          </ul>
+        </nav>
+
+        <!-- RIGHT: auth controls -->
+        <div class="nav-auth">
+          <% if (!isAuthenticated) { %>
+          <!-- Not logged in: show Login & Register -->
+          <a class="btn-auth btn-login" href="/users/login">Login</a>
+          <a class="btn-auth btn-register" href="/users/register">Register</a>
+          <% } else { %>
+          <!-- Logged in: show welcome badge + Logout -->
+          <span class="nav-user-badge"> Welcome, <%= currentUser %> </span>
+          <a class="btn-auth btn-logout" href="/users/logout">Logout</a>
+          <% } %>
+        </div>
+      </div>
     </header>
 
     <main class="container">
@@ -33,12 +46,32 @@
         <h2>Quick links</h2>
         <%# CTA list with short labels + buttons. %>
         <ul class="list">
-          <li><span class="title">Learn about us</span><a class="btn ghost" href="/about">About <%= shopData.shopName %></a></li>
-          <li><span class="title">Find a book fast</span><a class="btn ghost" href="/books/search">Search for books</a></li>
-          <li><span class="title">Become a member</span><a class="btn ghost" href="/users/register">Register</a></li>
-          <li><span class="title">Add inventory</span><a class="btn ghost" href="/books/addbook">Add a new book</a></li>
-          <li><span class="title">Browse all titles</span><a class="btn ghost" href="/books/list">List books</a></li>
-          <li><span class="title">Save money</span><a class="btn ghost" href="/books/bargainbooks">Bargain Books</a></li>
+          <li>
+            <span class="title">Learn about us</span
+            ><a class="btn ghost" href="/about"
+              >About <%= shopData.shopName %></a
+            >
+          </li>
+          <li>
+            <span class="title">Find a book fast</span
+            ><a class="btn ghost" href="/books/search">Search for books</a>
+          </li>
+          <li>
+            <span class="title">Become a member</span
+            ><a class="btn ghost" href="/users/register">Register</a>
+          </li>
+          <li>
+            <span class="title">Add inventory</span
+            ><a class="btn ghost" href="/books/addbook">Add a new book</a>
+          </li>
+          <li>
+            <span class="title">Browse all titles</span
+            ><a class="btn ghost" href="/books/list">List books</a>
+          </li>
+          <li>
+            <span class="title">Save money</span
+            ><a class="btn ghost" href="/books/bargainbooks">Bargain Books</a>
+          </li>
         </ul>
       </section>
     </main>

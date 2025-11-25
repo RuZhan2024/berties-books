@@ -30,6 +30,12 @@ app.use(session({
   }
 }))
 
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = !!req.session.userId;     // true/false
+  res.locals.currentUser = req.session.user;   // email or undefined
+  next();
+});
+
 // Set up public folder (for css and static js)
 app.use(express.static(path.join(__dirname, 'public')))
 

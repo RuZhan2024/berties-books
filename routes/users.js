@@ -49,20 +49,23 @@ router.post(
     check("email")
       .isEmail()
       .withMessage("Please enter a valid email address."),
-    check("username")
-      .isLength({ min: 5, max: 20 })
-      .withMessage("Username must be between 5 and 20 characters."),
+    check("first")
+      .isLength({ min: 2, max: 20 })
+      .withMessage("Firstname must be between 2 and 20 characters."),
+      check("last")
+      .isLength({ min: 2, max: 20 })
+      .withMessage("Lastname must be between 2 and 20 characters."),
     check("password")
       .isLength({ min: 8 })
       .withMessage("Password must be at least 8 characters long."),
   ],
   function (req, res, next) {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
+    const result = validationResult(req);
+    console.log("errors: ", result.errors);
+    if (!result.isEmpty()) {
       // If validation fails, re-render the register page
       return res.status(400).render("register.ejs", {
-        msg: "Please correct the highlighted fields (email, username, password).",
+        msg: result.errors[0].msg,
       });
     }
 
@@ -178,9 +181,9 @@ router.post("/login", function (req, res, next) {
       req.session.userId = user.id; // or user.email if you prefer
       req.session.user = user.first_name + " " + user.last_name;   // store login “username”
       logLoginAttempt(email, true);
-   
+      
       // After login, show the home page (or redirect somewhere else)
-      return res.render("index.ejs");
+      return res.redirect("../");
     });
   });
 });
@@ -221,19 +224,7 @@ router.get("/audit", redirectLogin, function (req, res, next) {
   });
 });
 
-// -----------------------------------------------------------------------------
-// Logout route – destroy the session and log the user out
-// -----------------------------------------------------------------------------
 
-router.get("/logout", redirectLogin, (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.redirect("/");
-    }
-    // Simple confirmation + link back to home
-    res.send('you are now logged out. <a href="/">Home</a>');
-  });
-});
 
 // Export the router to be used in app.js / index.js
 module.exports = router;

@@ -207,10 +207,11 @@ Initialise MySQL and the database (first time only):
 ```bash
 sudo apt-get update
 sudo apt-get install mysql-server
+sudo mysql 
 
 # in the MySQL shell
-mysql -u root -p < create_db.sql
-mysql -u root -p < insert_test_data.sql
+source create_db.sql 
+source insert_test_data.sql
 ```
 
 Create a `.env` file on the VM with the appropriate database credentials (see next section).

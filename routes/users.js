@@ -72,7 +72,6 @@ router.post(
     // Sanitise user input to protect against XSS (Lab 8b – Tasks 6–7)
     const first = req.sanitize(req.body.first);
     const last = req.sanitize(req.body.last);
-    const username = req.sanitize(req.body.username || "");
     const email = req.sanitize(req.body.email);
     const password = req.body.password;
     const confirm_password = req.body.confirm_password;
@@ -119,7 +118,7 @@ router.post(
             if (err) return next(err);
 
             // Registration succeeded, send user to the login page
-            return res.redirect("/users/login");
+            return res.redirect("./login");
           }
         );
       });

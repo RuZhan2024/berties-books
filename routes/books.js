@@ -99,7 +99,16 @@ router.get('/search', redirectLogin,(req, res) => {
 });
 
 // POST /search — Handle the submission of the search form and display results
-router.post('/search', (req, res, next) => {
+router.post('/search', redirectLogin, [
+  check('keyword')
+      .trim()
+      .notEmpty()
+      .withMessage('Please enter a search term.'),
+    check('mode')
+      .optional()
+      .isIn(['exact', 'partial'])
+      .withMessage('Invalid search mode.')
+], (req, res, next) => {
   // Extract keyword and search mode from the request body
   const rawKeyword = req.body.keyword || '';
   const mode = req.body.mode || 'partial';

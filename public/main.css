@@ -123,6 +123,7 @@ header.container p { margin: 6px 0 0; }
 .nav-main a:hover {
   transform: translateY(-1px);
   filter: brightness(1.02);
+  background-color: orangered;
 }
 
 /* ========= Right-side authentication controls ========= */

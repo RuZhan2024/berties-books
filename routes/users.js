@@ -47,20 +47,32 @@ router.post(
   "/registered",
   [
     check("username")
+      .trim()
       .isLength({ min: 5, max: 20 })
-      .withMessage("Firstname must be between 5 and 20 characters."),
+      .withMessage("Username must be between 5 and 20 characters."),
     check("email")
+      .normalizeEmail()
       .isEmail()
       .withMessage("Please enter a valid email address."),
     check("first")
-      .isLength({ min: 1, max: 20 })
+      .trim()
+      .notEmpty()
+      .isLength({ max: 20 })
       .withMessage("Firstname must be between 1 and 20 characters."),
       check("last")
-      .isLength({ min: 1, max: 20 })
+      .trim()
+      .notEmpty()
+      .isLength({ max: 20 })
       .withMessage("Lastname must be between 1 and 20 characters."),
     check("password")
       .isLength({ min: 8 })
       .withMessage("Password must be at least 8 characters long."),
+    check("confirm_password")
+      .custom(validationResult,({req}) => {
+        if (value !== req.body.password) {
+          throw new Error("The passwords you entered do not match");
+        }
+      })
   ],
   function (req, res, next) {
     const result = validationResult(req);
@@ -77,21 +89,6 @@ router.post(
     const last = req.sanitize(req.body.last);
     const email = req.sanitize(req.body.email);
     const password = req.body.password;
-    const confirm_password = req.body.confirm_password;
-
-    // Basic input validation: make sure all fields are filled in
-    if (!(username&&first&&last&&email&&password&&confirm_password)) {
-      return res.render("register.ejs", {
-        msg: "Please complete all fields before submitting.",
-      });
-    }
-
-    // Check that the two password fields match
-    if (password !== confirm_password) {
-      return res.render("register.ejs", {
-        msg: "The passwords you entered do not match. Please try again.",
-      });
-    }
 
     const selectQuery = "SELECT username FROM users WHERE username = ?";
 
@@ -140,7 +137,22 @@ router.get("/login", function (req, res, next) {
 });
 
 // POST /users/login — handle login
-router.post("/login", function (req, res, next) {
+router.post("/login",[
+  check("username")
+    .notEmpty()
+    .isLength({min: 2, max: 20}) // min is not 5 because I need to match the length default username "gold"
+    .withMessage("Please enter a valid email address"),
+  check("password")
+    .notEmpty()
+    .isLength({min: 6, max: 20}) // Because the length of the password "smiths" is only 6.
+    .withMessage("Please enter your password.")
+], function (req, res, next) {
+  const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).render("login.ejs", {
+        msg: errors.array()[0].msg,
+      });
+    }
   // Sanitise email; password is not rendered back to the page so no need
   const username = req.sanitize(req.body.username);
   const password = req.body.password;
@@ -173,9 +185,9 @@ router.post("/login", function (req, res, next) {
 
       if (!isMatch) {
         // Password mismatch — log failed attempt and show generic message
-        logLoginAttempt(email, false);
+        logLoginAttempt(username, false);
         return res.render("login.ejs", {
-          msg: "Incorrect email or password. Please try again.",
+          msg: "Incorrect username or password. Please try again.",
         });
       }
       // At this point, the user is authenticated.

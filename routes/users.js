@@ -107,7 +107,6 @@ router.post(
       // Email is free — hash the password before saving it
       bcrypt.hash(password, SALT_ROUNDS, (err, hashedPassword) => {
         if (err) return next(err);
-        console.log("hashed password: ", hashedPassword);
         const insertQuery =
           "INSERT INTO users (username,first_name, last_name, email, hashed_password) VALUES (?, ?, ?, ?, ?)";
 

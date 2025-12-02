@@ -2,26 +2,108 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Weather Forcast</title>
+  <title>Weather Forecast</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="stylesheet" href="/main.css" />
 </head>
 <body>
-  <%# Renders a table of all available books. Expects 'books'. %>
   <header class="container">
-    <h1>Weather Forcast</h1>
-    <p><a href="/">← Back home</a></p>
+    <h1>Weather Forecast</h1>
+    <p class="muted">
+      Enter a city name to see the current weather.
+      <a href="/">← Back home</a>
+    </p>
   </header>
 
   <main class="container">
-    <form action="/weather" method="get">
-      <label>
-        City:
-        <input id="city" name="city" type="text" placeholder="Please enter the city."/>
-      </label>
-      <button type="submit">Search</button>
-    </form>
-    <%- result %>
+    <!-- Search card -->
+    <section class="section">
+      <div class="card">
+        <h2>Search weather by city</h2>
+        <p class="muted mt-2">
+          Example: <code>London</code>, <code>Paris</code>, <code>Tokyo</code>
+        </p>
+
+        <form action="/weather" method="get" class="form mt-3">
+          <label for="city">
+            City
+            <input
+              id="city"
+              name="city"
+              type="text"
+              placeholder="Please enter the city."
+              value="<%= result && result.city ? result.city : '' %>"
+            />
+          </label>
+
+          <button type="submit" class="btn">
+            Search
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Result / error section -->
+    <section class="section">
+      <% if (error) { %>
+        <div class="error">
+          <strong><%= error %></strong>
+        </div>
+      <% } else if (result) { %>
+        <div class="card mt-3">
+          <h2>
+            Weather in
+            <%= result.city %>
+            <% if (result.country) { %>
+              (<%= result.country %>)
+            <% } %>
+          </h2>
+
+          <% if (result.description) { %>
+            <p class="mt-2">
+              <strong>Condition:</strong>
+              <%= result.description %>
+            </p>
+          <% } %>
+
+          <p class="mt-2">
+            <strong>Temperature:</strong>
+            <%= result.temp %> °C
+            <% if (result.feelsLike !== undefined) { %>
+              (feels like <%= result.feelsLike %> °C)
+            <% } %>
+          </p>
+
+          <% if (result.tempMin !== undefined && result.tempMax !== undefined) { %>
+            <p class="mt-2">
+              <strong>Min / Max:</strong>
+              <%= result.tempMin %> °C / <%= result.tempMax %> °C
+            </p>
+          <% } %>
+
+          <% if (result.humidity !== undefined) { %>
+            <p class="mt-2">
+              <strong>Humidity:</strong>
+              <%= result.humidity %>%
+            </p>
+          <% } %>
+
+          <% if (result.windSpeed !== undefined) { %>
+            <p class="mt-2">
+              <strong>Wind:</strong>
+              <%= result.windSpeed %> m/s
+              <% if (result.windDeg !== undefined) { %>
+                (direction: <%= result.windDeg %>°)
+              <% } %>
+            </p>
+          <% } %>
+        </div>
+      <% } else { %>
+        <p class="muted mt-3">
+          Enter a city above and click <strong>Search</strong> to see the current weather.
+        </p>
+      <% } %>
+    </section>
   </main>
 </body>
 </html>

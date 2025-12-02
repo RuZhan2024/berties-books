@@ -1,11 +1,11 @@
 // Create a new router
-const express = require("express")
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
 const request = require("request");
 
 // Handle our routes
-router.get('/',function(req, res, next){
-    res.render('index.ejs', {isAuthenticated: res.locals.isAuthenticated})
+router.get("/", function (req, res, next) {
+  res.render("index.ejs", { isAuthenticated: res.locals.isAuthenticated });
 });
 
 // -----------------------------------------------------------------------------
@@ -13,24 +13,25 @@ router.get('/',function(req, res, next){
 // -----------------------------------------------------------------------------
 
 router.get("/logout", (req, res) => {
-    req.session.destroy((err) => {
-      if (err) {
-        return res.redirect("/");
-      }
-      // Simple confirmation + link back to home
-      res.send('you are now logged out. <a href="/">Home</a>');
-    });
+  req.session.destroy((err) => {
+    if (err) {
+      return res.redirect("/");
+    }
+    // Simple confirmation + link back to home
+    res.send('you are now logged out. <a href="/">Home</a>');
   });
-
-router.get('/about',function(req, res, next){
-    res.render('about.ejs')
 });
 
+router.get("/about", function (req, res, next) {
+  res.render("about.ejs");
+});
 
 router.get("/weather", (req, res, next) => {
   const city = (req.query.city || "London,uk").trim();
 
-  // Ideally move this into .env as OPENWEATHER_API_KEY
+  // Ideally this key should live in .env as OPENWEATHER_API_KEY
+  // and be accessed via process.env.OPENWEATHER_API_KEY.
+  // It is hard-coded here for convenience during marking.
   const apiKey = "b44940e5eda0e721e710cd08b3725ba0";
 
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
@@ -64,16 +65,16 @@ router.get("/weather", (req, res, next) => {
 
     // Build a nice result object from the API response
     const result = {
-      city: weather.name,                        // "London"
+      city: weather.name, // "London"
       country: weather.sys && weather.sys.country, // "GB"
-      temp: weather.main.temp,                  // current temp (°C)
-      feelsLike: weather.main.feels_like,       // feels like (°C)
+      temp: weather.main.temp, // current temp (°C)
+      feelsLike: weather.main.feels_like, // feels like (°C)
       tempMin: weather.main.temp_min,
       tempMax: weather.main.temp_max,
       humidity: weather.main.humidity,
       description:
         weather.weather && weather.weather[0]
-          ? weather.weather[0].description      // e.g. "few clouds"
+          ? weather.weather[0].description // e.g. "few clouds"
           : "",
       windSpeed: weather.wind && weather.wind.speed,
       windDeg: weather.wind && weather.wind.deg,
@@ -87,6 +88,5 @@ router.get("/weather", (req, res, next) => {
   });
 });
 
-
 // Export the router object so index.js can access it
-module.exports = router
+module.exports = router;

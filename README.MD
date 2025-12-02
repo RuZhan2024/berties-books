@@ -11,6 +11,8 @@ It includes:
 - Database configuration via **dotenv** (credentials not stored in source code).
 - Login **audit logging** to record successful and failed logins.
 - Server-side **validation** and **sanitisation** on key forms.
+- A **weather forecast** page calling the OpenWeatherMap API (`/weather`).  
+- A simple **JSON Books API** (`/api/books`) with search, price filters and sorting.
 
 ## Technologies Used
 
@@ -106,6 +108,140 @@ global.db = db;
 
 On the VM, a separate `.env` file is created with the VM’s database details, so the same codebase works both locally and remotely.
 
+## Weather Forecast (Lab 9a – Calling APIs)
+
+The app includes a simple **weather forecast** feature at:
+
+* `GET /weather`
+
+This page calls the **OpenWeatherMap** API to fetch the current weather for a chosen city and displays it in a styled EJS template.
+
+### How it works
+
+* The route builds an API URL like:
+
+  ```text
+  https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric
+  ```
+
+* The JSON response is parsed on the server and mapped to a small result object:
+
+  * City and country.
+  * Temperature (°C) and “feels like” temperature.
+  * Min/max temperature.
+  * Humidity.
+  * Weather description (e.g. “few clouds”).
+  * Wind speed and direction.
+
+* If the API call fails or the city is unknown, a friendly **error message** is rendered instead of crashing.
+
+### Weather page
+
+The view `views/weatherforecast.ejs` provides:
+
+* A search form:
+
+  ```html
+  <form action="/weather" method="get" class="form">
+    <label for="city">
+      City
+      <input
+        id="city"
+        name="city"
+        type="text"
+        placeholder="Please enter the city."
+      />
+    </label>
+    <button type="submit" class="btn">Search</button>
+  </form>
+  ```
+
+* A results card that shows the current weather using the shared `main.css` styles (cards, buttons, typography).
+
+The home page (`index.ejs`) includes a link to `/weather`, so the feature is easy to find in the deployed app.
+
+## Books API (Lab 9b – Providing APIs)
+
+The app exposes a small **JSON API** for books. This is intended to be consumed by other programs, not by a browser template.
+
+### Base URL
+
+All API routes are mounted under `/api`:
+
+* `GET /api/books` — return books as JSON
+
+The API is **public** (not behind login) so it can be accessed without authentication.
+
+### JSON format
+
+Responses are JSON arrays of books, e.g.:
+
+```json
+[
+  { "id": 1, "name": "Brighton Rock", "price": 20.25 },
+  { "id": 2, "name": "Brave New World", "price": 25.00 }
+]
+```
+
+In case of database errors, the API returns a JSON representation of the error object.
+
+### Query parameters
+
+The `/api/books` endpoint supports several optional query parameters:
+
+#### 1. `search` – search by name (case-insensitive)
+
+* Filters books where the `name` contains the search term, case-insensitively.
+* Implemented using `LOWER(name) LIKE LOWER(?)` in SQL.
+
+Examples:
+
+* `GET /api/books?search=Brighton`
+* `GET /api/books?search=world`
+
+#### 2. `minprice` and `max_price` – price range filters
+
+* `minprice` — only return books with `price >= minprice`.
+* `max_price` — only return books with `price <= max_price`.
+* Both are optional; if omitted, that side of the range is not applied.
+
+Examples:
+
+* `GET /api/books?minprice=5`
+* `GET /api/books?max_price=15`
+* `GET /api/books?minprice=5&max_price=20`
+
+Numeric values are parsed safely; invalid or empty values are ignored.
+
+#### 3. `sort` – sort order
+
+* `sort=name` — sort alphabetically by book name.
+* `sort=price` — sort numerically by price ascending.
+* Defaults to `name` if `sort` is missing or invalid.
+
+Example:
+
+* `GET /api/books?sort=price`
+* `GET /api/books?search=world&minprice=5&max_price=20&sort=price`
+
+The sort column is restricted to a small **whitelist** (`name`, `price`) to avoid SQL injection from user-provided column names.
+
+### Putting it together – example requests
+
+Some example requests and what they do:
+
+* `GET /api/books`
+  → All books, sorted by name.
+
+* `GET /api/books?search=Brighton`
+  → Only books whose names contain “Brighton”.
+
+* `GET /api/books?minprice=5&max_price=15`
+  → Books priced between £5 and £15 inclusive.
+
+* `GET /api/books?search=world&minprice=5&max_price=30&sort=price`
+  → Books matching “world” in the name, priced between £5 and £30, sorted by price ascending.
+
 ## Session Management & Authorisation
 
 Session management is enabled using `express-session` in `index.js`:
@@ -186,12 +322,15 @@ The following routes are intentionally public:
 * `POST /users/registered` – registration handler.
 * `GET /users/login` – login form.
 * `POST /users/login` – login handler.
+* `GET /weather` – weather forecast page.
+* `GET /api/books` – JSON books API.
 
-These remain open so users can:
+These remain open so users (or other applications) can:
 
 * Discover the site.
-* Register a new account.
-* Log in for the first time.
+* Register and log in.
+* Access the weather feature.
+* Consume the books API without logging in.
 
 ### Logout
 
@@ -380,7 +519,8 @@ Sanitisation is applied to string fields that can be displayed back to users (na
 ├─ routes/
 │  ├─ main.js                  # home and about routes
 │  ├─ books.js                 # book-related routes (list/add/search/bargain)
-│  └─ users.js                 # registration, login, user list, audit
+│  ├─ users.js                 # registration, login, user list, audit
+│  └─ api.js                   # JSON API for books (/api/books)
 ├─ views/
 │  ├─ index.ejs                # home
 │  ├─ about.ejs                # about page
@@ -390,7 +530,8 @@ Sanitisation is applied to string fields that can be displayed back to users (na
 │  ├─ register.ejs             # registration form
 │  ├─ login.ejs                # login form
 │  ├─ userList.ejs             # list of users
-│  └─ audit.ejs                # login audit table
+│  ├─ audit.ejs                # login audit table
+│  └─ weatherforecast.ejs      # weather search + results page
 ├─ create_db.sql               # database schema + app user creation
 ├─ insert_test_data.sql        # initial sample data (books + demo user)
 ├─ index.js                    # Express app bootstrap, sessions, MySQL pool
@@ -458,3 +599,4 @@ The file `links.txt` in the project root contains a single line pointing to the 
 ```text
 home=http://www.doc.gold.ac.uk/usr/122/
 ```
+

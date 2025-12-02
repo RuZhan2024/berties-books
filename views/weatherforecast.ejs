@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Weather Forcast</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="/main.css" />
+</head>
+<body>
+  <%# Renders a table of all available books. Expects 'books'. %>
+  <header class="container">
+    <h1>Weather Forcast</h1>
+    <p><a href="/">← Back home</a></p>
+  </header>
+
+  <main class="container">
+    <form action="/weather/weather" method="get">
+      <label>
+        City:
+        <input id="city" name="city" type="text" placeholder="Please enter the city."/>
+      </label>
+      <button type="submit">Search</button>
+    </form>
+    <%- result %>
+  </main>
+</body>
+</html>
